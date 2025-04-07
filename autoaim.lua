@@ -10,6 +10,7 @@ local Camera = workspace.CurrentCamera
 
 -- Variables
 local aimbotEnabled = false
+local thirdPersonEnabled = false
 local switchDistance = 40
 local currentTarget = nil
 local indicatorGui = nil
@@ -89,11 +90,12 @@ end
 
 -- Aimbot logic
 RunService.RenderStepped:Connect(function()
-    if not aimbotEnabled then return end
-    local target = getSmartTarget()
     local myChar = LocalPlayer.Character
+    if not (aimbotEnabled or thirdPersonEnabled) then return end
+    if not myChar or not myChar:FindFirstChild("HumanoidRootPart") then return end
 
-    if target and myChar and myChar:FindFirstChild("HumanoidRootPart") and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
+    local target = getSmartTarget()
+    if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
         if currentTarget ~= target then
             currentTarget = target
             createIndicator(currentTarget.Character.HumanoidRootPart)
@@ -102,9 +104,15 @@ RunService.RenderStepped:Connect(function()
         local myHRP = myChar.HumanoidRootPart
         local targetHRP = currentTarget.Character.HumanoidRootPart
         local dir = (targetHRP.Position - myHRP.Position).Unit
+        local lookVector = Vector3.new(dir.X, 0, dir.Z)
 
-        myHRP.CFrame = CFrame.new(myHRP.Position, myHRP.Position + Vector3.new(dir.X, 0, dir.Z))
-        Camera.CFrame = CFrame.new(Camera.CFrame.Position, targetHRP.Position)
+        -- Rotate body toward target
+        myHRP.CFrame = CFrame.new(myHRP.Position, myHRP.Position + lookVector)
+
+        -- If regular aimbot: also rotate camera
+        if aimbotEnabled then
+            Camera.CFrame = CFrame.new(Camera.CFrame.Position, targetHRP.Position)
+        end
 
         if canShootAtTarget(targetHRP) then
             shootStatusLabel.Text = "Shoot Status: Can Shoot"
@@ -128,6 +136,11 @@ end)
 createShootStatusUI()
 local Tab = Window:NewTab("Aimbot")
 local Section = Tab:NewSection("Main")
-Section:NewToggle("Enable Aimbot", "Toggles the aimbot on/off", function(state)
+
+Section:NewToggle("Enable Aimbot", "Toggles the full aimbot with camera lock", function(state)
     aimbotEnabled = state
+end)
+
+Section:NewToggle("3rd Person", "Only rotates your character without moving camera", function(state)
+    thirdPersonEnabled = state
 end)
