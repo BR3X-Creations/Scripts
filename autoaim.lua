@@ -2,9 +2,6 @@
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/DenDenZZZ/Kavo-UI-Library/main/Kavo.lua"))()
 local Window = Library.CreateLib("Aimbot UI", "DarkTheme")
 
--- Make UI draggable
-Library:DraggingEnabled(Window, true)
-
 -- Aimbot toggle variables
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
