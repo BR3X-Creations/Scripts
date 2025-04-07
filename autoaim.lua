@@ -2,23 +2,25 @@
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/DenDenZZZ/Kavo-UI-Library/main/Kavo.lua"))()
 local Window = Library.CreateLib("Aimbot UI", "DarkTheme")
 
--- Aimbot toggle variables
+-- Services
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local LocalPlayer = Players.LocalPlayer
 local Camera = workspace.CurrentCamera
+
+-- Variables
 local aimbotEnabled = false
 local switchDistance = 40
 local currentTarget = nil
 local indicatorGui = nil
-local shootStatusLabel
+local shootStatusLabel = nil
 
--- Create visual indicator
+-- Visual indicator
 local function createIndicator(targetPart)
     if indicatorGui then indicatorGui:Destroy() end
     indicatorGui = Instance.new("BillboardGui")
     indicatorGui.Name = "TargetIndicator"
-    indicatorGui.Size = UDim2.new(0, 10.8, 0, 10.8) -- 10% smaller
+    indicatorGui.Size = UDim2.new(0, 10.8, 0, 10.8)
     indicatorGui.AlwaysOnTop = true
     indicatorGui.StudsOffset = Vector3.new(0, 3, 0)
     indicatorGui.Parent = targetPart
@@ -31,10 +33,10 @@ local function createIndicator(targetPart)
     redDot.Parent = indicatorGui
 end
 
--- Shoot status UI
+-- Shoot status label
 local function createShootStatusUI()
     shootStatusLabel = Instance.new("TextLabel")
-    shootStatusLabel.Size = UDim2.new(0, 180, 0, 45) -- 10% smaller
+    shootStatusLabel.Size = UDim2.new(0, 180, 0, 45)
     shootStatusLabel.Position = UDim2.new(0, 10, 0, 10)
     shootStatusLabel.BackgroundTransparency = 1
     shootStatusLabel.TextColor3 = Color3.new(1, 0, 0)
@@ -44,6 +46,7 @@ local function createShootStatusUI()
     shootStatusLabel.Parent = game:GetService("CoreGui")
 end
 
+-- Smart target selection
 local function getSmartTarget()
     local myChar = LocalPlayer.Character
     if not myChar or not myChar:FindFirstChild("HumanoidRootPart") then return end
@@ -72,6 +75,7 @@ local function getSmartTarget()
     return lookingAtYouPlayer or closestPlayer
 end
 
+-- Raycast check
 local function canShootAtTarget(targetHRP)
     local myChar = LocalPlayer.Character
     if not myChar or not myChar:FindFirstChild("HumanoidRootPart") then return false end
@@ -83,6 +87,7 @@ local function canShootAtTarget(targetHRP)
     return not hit
 end
 
+-- Aimbot logic
 RunService.RenderStepped:Connect(function()
     if not aimbotEnabled then return end
     local target = getSmartTarget()
@@ -119,10 +124,8 @@ RunService.RenderStepped:Connect(function()
     end
 end)
 
--- Create Shoot Status UI
+-- Setup UI
 createShootStatusUI()
-
--- Add toggle to Kavo UI
 local Tab = Window:NewTab("Aimbot")
 local Section = Tab:NewSection("Main")
 Section:NewToggle("Enable Aimbot", "Toggles the aimbot on/off", function(state)
