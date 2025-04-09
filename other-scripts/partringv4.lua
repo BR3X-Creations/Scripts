@@ -401,5 +401,5 @@ StarterGui:SetCore("SendNotification", {
     Title = "Super ring parts V4",
     Text = "Now with no chat message and bigger limits",
     Icon = content,
-    Duration = 5
+    Duration = 7
 })
