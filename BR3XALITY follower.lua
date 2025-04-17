@@ -4,7 +4,7 @@
 
 -- "Hello" Notification on Load
 game:GetService("StarterGui"):SetCore("SendNotification", {
-    Title = "subscribe https://github.com/BR3X!",
+    Title = "subscribe https://github.com/BR3XALITY!",
     Text = "Hello stalker or me if you're a fan or sub, great!",
     Duration = 5
 })
