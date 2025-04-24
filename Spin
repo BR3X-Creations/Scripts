@@ -1,0 +1,41 @@
+-- Load Kavo UI Library (Styled Version)
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/DenDenZZZ/Kavo-UI-Library/main/Kavo.lua"))()
+local Window = Library.CreateLib("Spin Tool", "BloodTheme")
+local Tab = Window:NewTab("Spin")
+local Section = Tab:NewSection("Main")
+
+-- Variables
+local spinning = false
+local speed = 0
+local spinConnection
+
+-- Spin logic
+local function startSpinning()
+    local RunService = game:GetService("RunService")
+    local LocalPlayer = game:GetService("Players").LocalPlayer
+    local rootPart = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+
+    if not rootPart then return end
+
+    spinConnection = RunService.Heartbeat:Connect(function(dt)
+        if not spinning then return end
+        speed = speed + (dt * 10) -- increase spin speed over time
+        rootPart.CFrame = rootPart.CFrame * CFrame.Angles(0, math.rad(speed), 0)
+    end)
+end
+
+-- Toggle spin
+Section:NewToggle("Spin Faster & Faster", "Makes you spin endlessly and accelerate over time", function(state)
+    spinning = state
+    if state then
+        speed = 0
+        startSpinning()
+    elseif spinConnection then
+        spinConnection:Disconnect()
+    end
+end)
+
+-- Reset Button
+Section:NewButton("Reset Speed", "Resets spin speed to 0", function()
+    speed = 0
+end)
