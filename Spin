@@ -8,6 +8,7 @@ local Section = Tab:NewSection("Main")
 local spinning = false
 local speed = 0
 local spinConnection
+local multiplier = 1
 
 -- Spin logic
 local function startSpinning()
@@ -19,10 +20,18 @@ local function startSpinning()
 
     spinConnection = RunService.Heartbeat:Connect(function(dt)
         if not spinning then return end
-        speed = speed + (dt * 10) -- increase spin speed over time
+        speed = speed + (dt * 10 * multiplier)
         rootPart.CFrame = rootPart.CFrame * CFrame.Angles(0, math.rad(speed), 0)
     end)
 end
+
+-- Input box for speed multiplier
+Section:NewTextBox("Speed Multiplier", "Enter how fast it accelerates (default 1)", function(txt)
+    local num = tonumber(txt)
+    if num then
+        multiplier = num
+    end
+end)
 
 -- Toggle spin
 Section:NewToggle("Spin Faster & Faster", "Makes you spin endlessly and accelerate over time", function(state)
