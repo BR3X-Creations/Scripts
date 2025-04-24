@@ -1,3 +1,50 @@
+-- Loading Screen with Progress Bar and Sound
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local player = Players.LocalPlayer
+local PlayerGui = player:WaitForChild("PlayerGui")
+
+local screenGui = Instance.new("ScreenGui", PlayerGui)
+screenGui.Name = "LoadingScreen"
+
+local bg = Instance.new("Frame", screenGui)
+bg.Size = UDim2.new(1, 0, 1, 0)
+bg.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+
+local label = Instance.new("TextLabel", bg)
+label.Size = UDim2.new(1, 0, 0.1, 0)
+label.Position = UDim2.new(0, 0, 0.45, 0)
+label.Text = "Loading..."
+label.TextColor3 = Color3.new(1, 1, 1)
+label.Font = Enum.Font.GothamBold
+label.TextSize = 30
+label.BackgroundTransparency = 1
+
+local bar = Instance.new("Frame", bg)
+bar.Size = UDim2.new(0, 0, 0.05, 0)
+bar.Position = UDim2.new(0.25, 0, 0.55, 0)
+bar.BackgroundColor3 = Color3.fromRGB(math.random(0,255), math.random(0,255), math.random(0,255))
+bar.BorderSizePixel = 0
+
+-- Sound
+local sound = Instance.new("Sound", screenGui)
+sound.SoundId = "rbxassetid://5610058792"
+sound:Play()
+
+-- Tween the loading bar
+TweenService:Create(bar, TweenInfo.new(19, Enum.EasingStyle.Linear), {Size = UDim2.new(0.5, 0, 0.05, 0)}):Play()
+
+task.wait(19)
+
+-- Fade out
+TweenService:Create(bg, TweenInfo.new(1), {BackgroundTransparency = 1}):Play()
+TweenService:Create(label, TweenInfo.new(1), {TextTransparency = 1}):Play()
+TweenService:Create(bar, TweenInfo.new(1), {BackgroundTransparency = 1}):Play()
+
+task.wait(1)
+screenGui:Destroy()
+
+-- Dylan Script UI Starts Below
 --------------------------------------------------------------------------------
 -- DYLAN SCRIPT UI: A Custom Window with Three Teleport Buttons (Auto-Teleport Toggle)
 --------------------------------------------------------------------------------
