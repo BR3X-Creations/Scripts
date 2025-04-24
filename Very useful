@@ -1,0 +1,8 @@
+-- Auto-aim script
+loadstring(game:HttpGet("https://raw.githubusercontent.com/BR3X-Creations/Scripts/refs/heads/main/autoaim.lua"))()
+
+-- Spin script
+loadstring(game:HttpGet("https://raw.githubusercontent.com/BR3X-Creations/Scripts/refs/heads/main/Spin"))()
+
+-- BR3XALITY follower script
+loadstring(game:HttpGet("https://raw.githubusercontent.com/BR3X-Creations/Scripts/refs/heads/main/BR3XALITY%20follower.lua"))()
