@@ -1,14 +1,42 @@
--- Load Kavo UI Library
+--// Loading Screen
+local TweenService = game:GetService("TweenService")
+local Sound = Instance.new("Sound", workspace)
+Sound.SoundId = "rbxassetid://5610058792"
+Sound:Play()
+
+local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
+local Frame = Instance.new("Frame", ScreenGui)
+local Bar = Instance.new("Frame", Frame)
+
+ScreenGui.IgnoreGuiInset = true
+ScreenGui.ResetOnSpawn = false
+ScreenGui.Name = "LoadingUI"
+
+Frame.Size = UDim2.new(0.3, 0, 0.05, 0)
+Frame.Position = UDim2.new(0.35, 0, 0.475, 0)
+Frame.BackgroundColor3 = Color3.new(0, 0, 0)
+Frame.BorderSizePixel = 0
+
+Bar.Size = UDim2.new(0, 0, 1, 0)
+Bar.BackgroundColor3 = Color3.fromHSV(math.random(), 1, 1)
+Bar.BorderSizePixel = 0
+Bar.Parent = Frame
+
+local tween = TweenService:Create(Bar, TweenInfo.new(19, Enum.EasingStyle.Linear), {Size = UDim2.new(1, 0, 1, 0)})
+tween:Play()
+
+wait(19)
+ScreenGui:Destroy()
+
+--// Aimbot UI
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/DenDenZZZ/Kavo-UI-Library/main/Kavo.lua"))()
 local Window = Library.CreateLib("Aimbot UI", "DarkTheme")
 
--- Services
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local LocalPlayer = Players.LocalPlayer
 local Camera = workspace.CurrentCamera
 
--- Variables
 local aimbotEnabled = false
 local thirdPersonEnabled = false
 local switchDistance = 40
@@ -16,7 +44,6 @@ local currentTarget = nil
 local indicatorGui = nil
 local shootStatusLabel = nil
 
--- Visual indicator
 local function createIndicator(targetPart)
     if indicatorGui then indicatorGui:Destroy() end
     indicatorGui = Instance.new("BillboardGui")
@@ -34,7 +61,6 @@ local function createIndicator(targetPart)
     redDot.Parent = indicatorGui
 end
 
--- Shoot status label
 local function createShootStatusUI()
     shootStatusLabel = Instance.new("TextLabel")
     shootStatusLabel.Size = UDim2.new(0, 180, 0, 45)
@@ -47,7 +73,6 @@ local function createShootStatusUI()
     shootStatusLabel.Parent = game:GetService("CoreGui")
 end
 
--- Smart target selection
 local function getSmartTarget()
     local myChar = LocalPlayer.Character
     if not myChar or not myChar:FindFirstChild("HumanoidRootPart") then return end
@@ -76,7 +101,6 @@ local function getSmartTarget()
     return lookingAtYouPlayer or closestPlayer
 end
 
--- Raycast check
 local function canShootAtTarget(targetHRP)
     local myChar = LocalPlayer.Character
     if not myChar or not myChar:FindFirstChild("HumanoidRootPart") then return false end
@@ -88,7 +112,6 @@ local function canShootAtTarget(targetHRP)
     return not hit
 end
 
--- Aimbot logic
 RunService.RenderStepped:Connect(function()
     local myChar = LocalPlayer.Character
     if not (aimbotEnabled or thirdPersonEnabled) then return end
@@ -106,10 +129,8 @@ RunService.RenderStepped:Connect(function()
         local dir = (targetHRP.Position - myHRP.Position).Unit
         local lookVector = Vector3.new(dir.X, 0, dir.Z)
 
-        -- Rotate body toward target
         myHRP.CFrame = CFrame.new(myHRP.Position, myHRP.Position + lookVector)
 
-        -- If regular aimbot: also rotate camera
         if aimbotEnabled then
             Camera.CFrame = CFrame.new(Camera.CFrame.Position, targetHRP.Position)
         end
@@ -132,7 +153,6 @@ RunService.RenderStepped:Connect(function()
     end
 end)
 
--- Setup UI
 createShootStatusUI()
 local Tab = Window:NewTab("Aimbot")
 local Section = Tab:NewSection("Main")
